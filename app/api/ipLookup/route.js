@@ -13,7 +13,8 @@ export async function GET(request) {
 
     // 通过ip-api.com接口获取IP地址信息
     // 在服务端发起http请求，避免客户端混合内容警告
-    const apiUrl = `http://ip-api.com/json/?lang=zh-CN`
+    console.log('ip', ip)
+    const apiUrl = `http://ip-api.com/json/${ip}?lang=zh-CN`
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
