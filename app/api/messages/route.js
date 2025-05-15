@@ -31,7 +31,7 @@ export async function GET() {
 export async function POST(request) {
   try {
     const body = await request.json()
-    const { name, content } = body
+    const { name, content, ipInfo } = body
 
     // 验证必填字段
     if (!name || !content) {
@@ -56,11 +56,19 @@ export async function POST(request) {
       )
     }
 
+    // 准备IP信息数据
+    const ipData = ipInfo || {}
+
     // 在数据库中创建新留言
     const newMessage = await prisma.message.create({
       data: {
         name: name.trim(),
         content: content.trim(),
+        // IP信息
+        ip: ipData.ip || null,
+        country: ipData.country || null,
+        region: ipData.region || null,
+        city: ipData.city || null,
         // timestamp会自动通过@default(now())设置
       },
     })

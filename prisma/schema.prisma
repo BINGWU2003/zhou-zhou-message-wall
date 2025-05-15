@@ -16,6 +16,10 @@ model Message {
   name      String
   content   String   @db.Text
   timestamp DateTime @default(now())
+  ip        String?  @db.VarChar(50)
+  country   String?  @db.VarChar(50)
+  region    String?  @db.VarChar(50)
+  city      String?  @db.VarChar(50)
 
   @@map("messages")
 } 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaUser, FaClock, FaHeart } from "react-icons/fa";
+import { FaUser, FaClock, FaHeart, FaMapMarkerAlt } from "react-icons/fa";
 import { Card, CardContent } from "./ui/card";
 import { cn } from "@/app/lib/utils";
 
@@ -32,6 +32,20 @@ export default function MessageList({ messages = [], newMessage = null }) {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  // 获取位置信息文本
+  const getLocationText = (message) => {
+    if (!message.country && !message.region && !message.city) {
+      return null;
+    }
+
+    const locationParts = [];
+    if (message.country) locationParts.push(message.country);
+    if (message.region) locationParts.push(message.region);
+    if (message.city) locationParts.push(message.city);
+
+    return locationParts.join(" · ");
   };
 
   if (displayMessages.length === 0) {
@@ -71,11 +85,20 @@ export default function MessageList({ messages = [], newMessage = null }) {
                 {message.content}
               </p>
 
-              <div className="flex items-center text-xs text-muted-foreground">
-                <FaClock className="mr-1" />
-                <time dateTime={message.timestamp}>
-                  {formatDate(message.timestamp)}
-                </time>
+              <div className="flex flex-col gap-1 text-xs text-muted-foreground">
+                <div className="flex items-center">
+                  <FaClock className="mr-1" />
+                  <time dateTime={message.timestamp}>
+                    {formatDate(message.timestamp)}
+                  </time>
+                </div>
+
+                {getLocationText(message) && (
+                  <div className="flex items-center text-xs text-muted-foreground">
+                    <FaMapMarkerAlt className="mr-1 text-primary/60" />
+                    <span>{getLocationText(message)}</span>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

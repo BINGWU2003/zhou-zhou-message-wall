@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { FaPaperPlane } from "react-icons/fa";
@@ -20,6 +20,40 @@ export default function MessageForm({ onMessageAdded }) {
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ipInfo, setIpInfo] = useState(null);
+  const [isLoadingIp, setIsLoadingIp] = useState(true);
+
+  // 页面加载时获取用户IP位置信息
+  useEffect(() => {
+    const fetchIpInfo = async () => {
+      try {
+        setIsLoadingIp(true);
+        const response = await axios.get("/api/ipLookup");
+        if (response.status === 200) {
+          setIpInfo(response.data);
+        }
+      } catch (error) {
+        console.error("获取IP位置信息失败:", error);
+        // 出错时不显示错误信息给用户，静默失败
+      } finally {
+        setIsLoadingIp(false);
+      }
+    };
+
+    fetchIpInfo();
+  }, []);
+
+  // 格式化位置信息文本
+  const formatLocationInfo = () => {
+    if (!ipInfo) return "";
+
+    const parts = [];
+    if (ipInfo.country && ipInfo.country !== "未知") parts.push(ipInfo.country);
+    if (ipInfo.region) parts.push(ipInfo.region);
+    if (ipInfo.city) parts.push(ipInfo.city);
+
+    return parts.join(" · ");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +66,12 @@ export default function MessageForm({ onMessageAdded }) {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post("/api/messages", { name, content });
+      // 提交留言时附带IP位置信息
+      const response = await axios.post("/api/messages", {
+        name,
+        content,
+        ipInfo,
+      });
 
       if (response.status === 201) {
         toast.success("留言成功！");
@@ -85,6 +124,12 @@ export default function MessageForm({ onMessageAdded }) {
               disabled={isSubmitting}
             />
           </div>
+
+          {!isLoadingIp && formatLocationInfo() && (
+            <div className="text-xs text-muted-foreground pt-2">
+              <p className="opacity-70">您的位置: {formatLocationInfo()}</p>
+            </div>
+          )}
         </CardContent>
 
         <CardFooter>
