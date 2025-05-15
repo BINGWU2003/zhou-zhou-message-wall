@@ -36,18 +36,17 @@ export default function MessageForm({ onMessageAdded }) {
       // 显示获取位置信息的提示
       toast.loading("正在获取位置信息...");
 
-      // 1. 直接获取IP位置信息
-      const ipResponse = await axios.get("http://ip-api.com/json/?lang=zh-CN");
+      // 1. 使用腾讯IP查询接口获取位置信息
+      const ipResponse = await axios.get("https://r.inews.qq.com/api/ip2city");
       let ipInfo = null;
 
-      if (ipResponse.status === 200 && ipResponse.data.status === "success") {
-        ipInfo = {
-          ip: ipResponse.data.query,
-          country: ipResponse.data.country,
-          region: ipResponse.data.regionName,
-          city: ipResponse.data.city,
-        };
-      }
+      // 处理腾讯API返回的数据
+      ipInfo = {
+        ip: ipResponse.data.query,
+        country: ipResponse.data.country,
+        region: ipResponse.data.province,
+        city: ipResponse.data.city,
+      };
 
       // 2. 提交留言（包含IP信息）
       const response = await axios.post("/api/messages", {
@@ -68,7 +67,10 @@ export default function MessageForm({ onMessageAdded }) {
       console.error("提交留言失败:", error);
 
       // 显示友好的错误信息
-      if (error.message?.includes("ip-api.com")) {
+      if (
+        error.message?.includes("ip2city") ||
+        error.message?.includes("network")
+      ) {
         toast.error("获取位置信息失败，但仍会提交留言");
 
         // 如果获取IP失败，仍尝试提交留言
