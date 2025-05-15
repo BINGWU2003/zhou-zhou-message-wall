@@ -36,17 +36,9 @@ export default function MessageForm({ onMessageAdded }) {
       // 显示获取位置信息的提示
       toast.loading("正在获取位置信息...");
 
-      // 1. 使用腾讯IP查询接口获取位置信息
-      const ipResponse = await axios.get("https://iplark.com/ipstack");
-      let ipInfo = null;
-
-      // 处理腾讯API返回的数据
-      ipInfo = {
-        ip: ipResponse.data.ip,
-        country: ipResponse.data.country_name,
-        region: ipResponse.data.region_name,
-        city: ipResponse.data.city,
-      };
+      // 1. 首先获取IP位置信息
+      const ipResponse = await axios.get("/api/ipLookup");
+      const ipInfo = ipResponse.status === 200 ? ipResponse.data : null;
 
       // 2. 提交留言（包含IP信息）
       const response = await axios.post("/api/messages", {
@@ -67,10 +59,7 @@ export default function MessageForm({ onMessageAdded }) {
       console.error("提交留言失败:", error);
 
       // 显示友好的错误信息
-      if (
-        error.message?.includes("ip2city") ||
-        error.message?.includes("network")
-      ) {
+      if (error.message?.includes("ipLookup")) {
         toast.error("获取位置信息失败，但仍会提交留言");
 
         // 如果获取IP失败，仍尝试提交留言
