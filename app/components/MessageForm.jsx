@@ -36,14 +36,17 @@ export default function MessageForm({ onMessageAdded }) {
       // 显示获取位置信息的提示
       toast.loading("正在获取位置信息...");
 
-      // 通过自己的API路由代理请求，解决CORS问题
-      const ipResponse = await axios.get("/api/ipLookup");
+      // 1. 使用腾讯IP查询接口获取位置信息
+      const ipResponse = await axios.get("https://iplark.com/ipstack");
       let ipInfo = null;
 
-      if (ipResponse.status === 200) {
-        // 处理返回的数据
-        ipInfo = ipResponse.data;
-      }
+      // 处理腾讯API返回的数据
+      ipInfo = {
+        ip: ipResponse.data.ip,
+        country: ipResponse.data.country_name,
+        region: ipResponse.data.region_name,
+        city: ipResponse.data.city,
+      };
 
       // 2. 提交留言（包含IP信息）
       const response = await axios.post("/api/messages", {
@@ -64,7 +67,10 @@ export default function MessageForm({ onMessageAdded }) {
       console.error("提交留言失败:", error);
 
       // 显示友好的错误信息
-      if (error.message?.includes("ipLookup")) {
+      if (
+        error.message?.includes("ip2city") ||
+        error.message?.includes("network")
+      ) {
         toast.error("获取位置信息失败，但仍会提交留言");
 
         // 如果获取IP失败，仍尝试提交留言
