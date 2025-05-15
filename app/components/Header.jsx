@@ -1,9 +1,15 @@
 import { FaHeart, FaChalkboardTeacher } from "react-icons/fa";
 import { cn } from "@/app/lib/utils";
+import { ThemeToggle } from "./ui/theme-toggle";
 
 export default function Header() {
   return (
     <header className="bg-gradient-to-r from-primary to-secondary/90 text-white py-10 md:py-16 relative overflow-hidden">
+      {/* 主题切换开关 */}
+      <div className="absolute right-4 top-4 z-10">
+        <ThemeToggle />
+      </div>
+
       {/* 背景装饰 */}
       <div
         className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgb3BhY2l0eT0iMC4yIiBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxjaXJjbGUgY3g9IjEiIGN5PSIxIiByPSIxIi8+PC9nPjwvc3ZnPg==')] 

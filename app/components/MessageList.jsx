@@ -51,19 +51,20 @@ export default function MessageList({ messages = [], newMessage = null }) {
           <Card
             key={message.id}
             className={cn(
-              "overflow-hidden group hover:shadow-md transition-all duration-300 animate-fade-in border-l-4 border-primary"
+              "overflow-hidden group hover:shadow-md transition-all duration-300 animate-fade-in border-l-4 border-primary/80",
+              "dark:bg-gray-800/60 dark:backdrop-blur-sm"
             )}
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary">
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary dark:bg-primary/20">
                     <FaUser className="w-4 h-4" />
                   </span>
                   <span className="font-medium">{message.name}</span>
                 </div>
-                <FaHeart className="text-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <FaHeart className="text-pink-400 dark:text-pink-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
               <p className="text-card-foreground mb-4 break-words">
