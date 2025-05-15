@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { FaPaperPlane } from "react-icons/fa";
@@ -20,8 +20,59 @@ export default function MessageForm({ onMessageAdded }) {
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [locationInfo, setLocationInfo] = useState(null);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
-  // 点击提交时获取IP信息并发送留言
+  // 组件加载时获取位置信息
+  useEffect(() => {
+    const getLocationInfo = async () => {
+      setIsLoadingLocation(true);
+      try {
+        // 使用浏览器的地理位置API获取经纬度
+        const position = await new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error("您的浏览器不支持地理位置功能"));
+            return;
+          }
+
+          navigator.geolocation.getCurrentPosition(
+            (position) => resolve(position),
+            (error) => reject(error),
+            { timeout: 10000, enableHighAccuracy: true }
+          );
+        });
+
+        const { longitude, latitude } = position.coords;
+
+        // 使用经纬度调用后端API进行地理编码
+        const ipResponse = await axios.get(
+          `/api/ipLookup?longitude=${longitude}&latitude=${latitude}`
+        );
+
+        if (ipResponse.status === 200) {
+          setLocationInfo(ipResponse.data);
+        }
+      } catch (locationError) {
+        console.error("获取位置信息失败:", locationError);
+
+        // 位置获取失败，尝试不带经纬度参数获取IP信息
+        try {
+          const ipResponse = await axios.get("/api/ipLookup");
+          if (ipResponse.status === 200) {
+            setLocationInfo(ipResponse.data);
+          }
+        } catch (ipError) {
+          console.error("获取IP信息也失败:", ipError);
+        }
+      } finally {
+        setIsLoadingLocation(false);
+      }
+    };
+
+    getLocationInfo();
+  }, []);
+
+  // 提交表单
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,25 +84,11 @@ export default function MessageForm({ onMessageAdded }) {
     setIsSubmitting(true);
 
     try {
-      // 显示获取位置信息的提示
-      toast.loading("正在获取位置信息...");
-
-      let ipInfo = null;
-
-      try {
-        // 1. 首先获取IP位置信息
-        const ipResponse = await axios.get("/api/ipLookup");
-        ipInfo = ipResponse.status === 200 ? ipResponse.data : null;
-      } catch (ipError) {
-        console.error("获取IP位置信息失败:", ipError);
-        // 获取IP失败不阻止留言提交
-      }
-
-      // 2. 提交留言（包含IP信息，如果有的话）
+      // 提交留言（包含位置信息，如果有的话）
       const response = await axios.post("/api/messages", {
         name,
         content,
-        ipInfo,
+        ipInfo: locationInfo,
       });
 
       if (response.status === 201) {
@@ -69,7 +106,6 @@ export default function MessageForm({ onMessageAdded }) {
       toast.error("提交留言失败，请稍后重试");
     } finally {
       setIsSubmitting(false);
-      toast.dismiss(); // 关闭所有loading提示
     }
   };
 
@@ -110,7 +146,19 @@ export default function MessageForm({ onMessageAdded }) {
           </div>
 
           <div className="text-xs text-muted-foreground">
-            <p className="opacity-70">点击发送时将自动获取您的位置信息</p>
+            {isLoadingLocation ? (
+              <p className="opacity-70">正在获取位置信息...</p>
+            ) : locationInfo ? (
+              <p className="opacity-70">
+                位置信息:{" "}
+                {locationInfo.city ||
+                  locationInfo.region ||
+                  locationInfo.country ||
+                  "未知"}
+              </p>
+            ) : (
+              <p className="opacity-70">无法获取位置信息</p>
+            )}
           </div>
         </CardContent>
 
