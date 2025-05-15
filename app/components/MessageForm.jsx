@@ -36,9 +36,18 @@ export default function MessageForm({ onMessageAdded }) {
       // 显示获取位置信息的提示
       toast.loading("正在获取位置信息...");
 
-      // 1. 首先获取IP位置信息
-      const ipResponse = await axios.get("/api/ipLookup");
-      const ipInfo = ipResponse.status === 200 ? ipResponse.data : null;
+      // 1. 直接获取IP位置信息
+      const ipResponse = await axios.get("http://ip-api.com/json/?lang=zh-CN");
+      let ipInfo = null;
+
+      if (ipResponse.status === 200 && ipResponse.data.status === "success") {
+        ipInfo = {
+          ip: ipResponse.data.query,
+          country: ipResponse.data.country,
+          region: ipResponse.data.regionName,
+          city: ipResponse.data.city,
+        };
+      }
 
       // 2. 提交留言（包含IP信息）
       const response = await axios.post("/api/messages", {
@@ -59,7 +68,7 @@ export default function MessageForm({ onMessageAdded }) {
       console.error("提交留言失败:", error);
 
       // 显示友好的错误信息
-      if (error.message?.includes("ipLookup")) {
+      if (error.message?.includes("ip-api.com")) {
         toast.error("获取位置信息失败，但仍会提交留言");
 
         // 如果获取IP失败，仍尝试提交留言
