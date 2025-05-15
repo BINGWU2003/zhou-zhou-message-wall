@@ -11,7 +11,7 @@ let messages = [
   {
     id: '2',
     name: '小红',
-    content: '周周老师辛苦了，祝你备课顺利！',
+    content: '周周老师辛苦了，祝你备考顺利！',
     timestamp: new Date('2023-10-11').toISOString(),
   },
   {
