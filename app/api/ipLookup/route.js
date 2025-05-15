@@ -43,6 +43,8 @@ export async function GET(request) {
     if (data.status === 'fail') {
       return NextResponse.json({
         ip: ip,
+        ip1: request.headers.get('x-forwarded-for'),
+        ip2: request.headers.get('x-real-ip'),
         country: '未知',
         region: '',
         city: '',
