@@ -7,13 +7,11 @@ import { NextResponse } from 'next/server'
 export async function GET(request) {
   try {
     // 获取客户端IP地址
-    const ip = request.headers.get('x-forwarded-for') ||
-      request.headers.get('x-real-ip') ||
-      '106.16.161.246' // 默认IP，仅用于测试
-
+    const ip = request.headers.get('x-forwarded-for')
     // 通过ip-api.com接口获取IP地址信息
     // 在服务端发起http请求，避免客户端混合内容警告
-    console.log('ip', ip)
+    console.log('ip', request.headers.get('x-forwarded-for'))
+    console.log('x-real-ip', request.headers.get('x-real-ip'))
     const apiUrl = `http://ip-api.com/json/${ip}?lang=zh-CN`
     const response = await fetch(apiUrl, {
       method: 'GET',
