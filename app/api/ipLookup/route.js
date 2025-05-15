@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 
+// 配置为动态路由，必须添加这个导出，否则会尝试静态生成
+export const dynamic = 'force-dynamic'
+
 /**
  * 查询IP地址信息
  * 在服务端使用http请求ip-api.com，避免前端混合内容问题
@@ -18,7 +21,6 @@ export async function GET(request) {
       // 分割IP字符串，取逗号后的部分并去除空格
       ip = ip.split(',')[1].trim()
     }
-
 
 
     // 通过ip-api.com接口获取IP地址信息
@@ -52,8 +54,8 @@ export async function GET(request) {
     // 返回所需的地理位置信息
     return NextResponse.json({
       ip: data.query || ip,
-      ip1: request.headers.get('x-forwarded-for'),
-      ip2: request.headers.get('x-real-ip'),
+      ip1: forwardedIp,
+      ip2: realIp,
       country: data.country,
       region: data.regionName,
       city: data.city,

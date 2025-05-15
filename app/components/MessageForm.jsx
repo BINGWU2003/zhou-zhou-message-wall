@@ -36,11 +36,18 @@ export default function MessageForm({ onMessageAdded }) {
       // 显示获取位置信息的提示
       toast.loading("正在获取位置信息...");
 
-      // 1. 首先获取IP位置信息
-      const ipResponse = await axios.get("/api/ipLookup");
-      const ipInfo = ipResponse.status === 200 ? ipResponse.data : null;
+      let ipInfo = null;
 
-      // 2. 提交留言（包含IP信息）
+      try {
+        // 1. 首先获取IP位置信息
+        const ipResponse = await axios.get("/api/ipLookup");
+        ipInfo = ipResponse.status === 200 ? ipResponse.data : null;
+      } catch (ipError) {
+        console.error("获取IP位置信息失败:", ipError);
+        // 获取IP失败不阻止留言提交
+      }
+
+      // 2. 提交留言（包含IP信息，如果有的话）
       const response = await axios.post("/api/messages", {
         name,
         content,
@@ -59,32 +66,7 @@ export default function MessageForm({ onMessageAdded }) {
       console.error("提交留言失败:", error);
 
       // 显示友好的错误信息
-      if (error.message?.includes("ipLookup")) {
-        toast.error("获取位置信息失败，但仍会提交留言");
-
-        // 如果获取IP失败，仍尝试提交留言
-        try {
-          const response = await axios.post("/api/messages", {
-            name,
-            content,
-            ipInfo: null,
-          });
-
-          if (response.status === 201) {
-            toast.success("留言成功！");
-            onMessageAdded(response.data.message);
-
-            // 清空表单
-            setName("");
-            setContent("");
-          }
-        } catch (submitError) {
-          console.error("再次提交留言失败:", submitError);
-          toast.error("提交留言失败，请稍后重试");
-        }
-      } else {
-        toast.error("提交留言失败，请稍后重试");
-      }
+      toast.error("提交留言失败，请稍后重试");
     } finally {
       setIsSubmitting(false);
       toast.dismiss(); // 关闭所有loading提示
@@ -135,9 +117,7 @@ export default function MessageForm({ onMessageAdded }) {
         <CardFooter>
           <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting ? (
-              <span className="flex items-center gap-2">
-                {isSubmitting && "提交中..."}
-              </span>
+              <span className="flex items-center gap-2">提交中...</span>
             ) : (
               <span className="flex items-center gap-2">
                 发送祝福
