@@ -43,8 +43,6 @@ export async function GET(request) {
     if (data.status === 'fail') {
       return NextResponse.json({
         ip: ip,
-        ip1: request.headers.get('x-forwarded-for'),
-        ip2: request.headers.get('x-real-ip'),
         country: '未知',
         region: '',
         city: '',
@@ -54,6 +52,8 @@ export async function GET(request) {
     // 返回所需的地理位置信息
     return NextResponse.json({
       ip: data.query || ip,
+      ip1: request.headers.get('x-forwarded-for'),
+      ip2: request.headers.get('x-real-ip'),
       country: data.country,
       region: data.regionName,
       city: data.city,
