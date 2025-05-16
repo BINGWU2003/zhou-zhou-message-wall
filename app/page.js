@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { Toaster, toast } from 'sonner'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import MessageForm from './components/MessageForm'
@@ -39,6 +40,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
+      {/* Toaster 组件，用于显示通知 */}
+      <Toaster position="top-center" richColors />
+
       {/* 背景装饰元素 */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl"></div>
@@ -64,7 +68,10 @@ export default function Home() {
               ) : error ? (
                 <div className="text-center py-16 text-destructive">{error}</div>
               ) : (
-                <MessageList messages={messages} newMessage={newMessage} />
+                    <MessageList
+                      messages={messages}
+                      newMessage={newMessage}
+                    />
               )}
             </div>
           </div>

@@ -1,12 +1,27 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaUser, FaClock, FaHeart, FaMapMarkerAlt } from "react-icons/fa";
+import {
+  FaUser,
+  FaClock,
+  FaHeart,
+  FaMapMarkerAlt,
+  FaTrash,
+} from "react-icons/fa";
 import { Card, CardContent } from "./ui/card";
 import { cn } from "@/app/lib/utils";
+import { useAdminStore } from "./Footer";
+import { toast } from "sonner";
+import axios from "axios";
 
-export default function MessageList({ messages = [], newMessage = null }) {
+export default function MessageList({
+  messages = [],
+  newMessage = null,
+  onMessageDeleted,
+}) {
   const [displayMessages, setDisplayMessages] = useState(messages);
+  const { isAdminMode } = useAdminStore();
+  const [deletingId, setDeletingId] = useState(null);
 
   // 当收到新消息时更新列表
   useEffect(() => {
@@ -48,6 +63,26 @@ export default function MessageList({ messages = [], newMessage = null }) {
     return locationParts.join(" · ");
   };
 
+  // 处理删除留言
+  const handleDeleteMessage = async (id) => {
+    try {
+      setDeletingId(id);
+
+      // 调用API删除留言
+      await axios.delete(`/api/messages?id=${id}`);
+
+      // 从列表中移除该留言
+      setDisplayMessages((prev) => prev.filter((message) => message.id !== id));
+
+      toast.success("留言已删除");
+    } catch (error) {
+      console.error("删除留言失败:", error);
+      toast.error("删除留言失败，请重试");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   if (displayMessages.length === 0) {
     return (
       <div className="w-full text-center py-8">
@@ -58,7 +93,14 @@ export default function MessageList({ messages = [], newMessage = null }) {
 
   return (
     <div className="w-full">
-      <h2 className="text-xl font-bold mb-6 text-center">祝福留言墙</h2>
+      <h2 className="text-xl font-bold mb-6 text-center">
+        祝福留言墙
+        {isAdminMode && (
+          <span className="text-sm font-normal text-primary ml-2">
+            [管理模式已开启]
+          </span>
+        )}
+      </h2>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {displayMessages.map((message, index) => (
@@ -66,11 +108,28 @@ export default function MessageList({ messages = [], newMessage = null }) {
             key={message.id}
             className={cn(
               "overflow-hidden group hover:shadow-md transition-all duration-300 animate-fade-in border-l-4 border-primary/80",
-              "dark:bg-gray-800/60 dark:backdrop-blur-sm"
+              "dark:bg-gray-800/60 dark:backdrop-blur-sm",
+              isAdminMode && "border-red-400/50"
             )}
             style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <CardContent className="p-4">
+            <CardContent className="p-4 relative">
+              {isAdminMode && (
+                <button
+                  onClick={() => handleDeleteMessage(message.id)}
+                  disabled={deletingId === message.id}
+                  className="absolute top-2 right-2 p-2 text-red-500 hover:text-red-700 transition-colors z-10 bg-white/80 dark:bg-gray-800/80 rounded-full"
+                  title="删除此留言"
+                >
+                  <FaTrash
+                    className={cn(
+                      "w-4 h-4",
+                      deletingId === message.id && "animate-pulse opacity-50"
+                    )}
+                  />
+                </button>
+              )}
+
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary dark:bg-primary/20">

@@ -90,4 +90,60 @@ export async function POST(request) {
       { status: 500 }
     )
   }
+}
+
+/**
+ * 删除留言
+ */
+export async function DELETE(request) {
+  try {
+    // 从URL获取要删除的留言ID
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+
+    // 验证ID是否存在
+    if (!id) {
+      return NextResponse.json(
+        { error: '未提供留言ID' },
+        { status: 400 }
+      )
+    }
+
+    // 查找并删除留言
+    const deletedMessage = await prisma.message.delete({
+      where: {
+        id: id,
+      },
+    })
+
+    // 如果没有找到对应ID的留言，delete操作会抛出异常
+    // 所以如果执行到这一步，说明删除成功
+    return NextResponse.json(
+      { message: '留言删除成功', id: deletedMessage.id },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error('删除留言失败:', error)
+
+    // 处理留言不存在的情况
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        { error: '留言不存在' },
+        { status: 404 }
+      )
+    }
+
+    // 数据库连接错误特殊处理
+    if (error.code === 'P1001' || error.code === 'P1002') {
+      return NextResponse.json(
+        { error: '数据库连接失败，请联系管理员' },
+        { status: 503 }
+      )
+    }
+
+    return NextResponse.json(
+      { error: '删除留言失败，请稍后重试' },
+      { status: 500 }
+    )
+  }
 } 
