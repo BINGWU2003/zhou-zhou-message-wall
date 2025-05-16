@@ -7,6 +7,7 @@ import {
   FaHeart,
   FaMapMarkerAlt,
   FaTrash,
+  FaSpinner,
 } from "react-icons/fa";
 import { Card, CardContent } from "./ui/card";
 import { cn } from "@/app/lib/utils";
@@ -68,6 +69,9 @@ export default function MessageList({
     try {
       setDeletingId(id);
 
+      // 添加一个延迟以使加载效果更明显
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       // 调用API删除留言
       await axios.delete(`/api/messages?id=${id}`);
 
@@ -109,7 +113,8 @@ export default function MessageList({
             className={cn(
               "overflow-hidden group hover:shadow-md transition-all duration-300 animate-fade-in border-l-4 border-primary/80",
               "dark:bg-gray-800/60 dark:backdrop-blur-sm",
-              isAdminMode && "border-red-400/50"
+              isAdminMode && "border-red-400/50",
+              deletingId === message.id && "opacity-60"
             )}
             style={{ animationDelay: `${index * 0.1}s` }}
           >
@@ -121,13 +126,21 @@ export default function MessageList({
                   className="absolute top-2 right-2 p-2 text-red-500 hover:text-red-700 transition-colors z-10 bg-white/80 dark:bg-gray-800/80 rounded-full"
                   title="删除此留言"
                 >
-                  <FaTrash
-                    className={cn(
-                      "w-4 h-4",
-                      deletingId === message.id && "animate-pulse opacity-50"
-                    )}
-                  />
+                  {deletingId === message.id ? (
+                    <FaSpinner className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <FaTrash className="w-4 h-4" />
+                  )}
                 </button>
+              )}
+
+              {deletingId === message.id && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/5 dark:bg-black/20 z-5 backdrop-blur-[1px]">
+                  <div className="bg-white/90 dark:bg-gray-800/90 px-3 py-1 rounded-full flex items-center gap-2 shadow-sm">
+                    <FaSpinner className="animate-spin text-primary" />
+                    <span className="text-xs font-medium">正在删除...</span>
+                  </div>
+                </div>
               )}
 
               <div className="flex items-center justify-between mb-3">
