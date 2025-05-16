@@ -58,7 +58,7 @@ export default function Header() {
         {/* 标题 */}
         <h1 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white/95 to-white/90 drop-shadow-sm">
-            周周老师的加油站
+            周周的加油站
           </span>
         </h1>
 
@@ -76,7 +76,7 @@ export default function Header() {
               "items-center flex-wrap gap-2 leading-relaxed"
             )}
           >
-            这里汇集了大家对周周老师的支持与祝福
+            这里汇集了大家对周周的支持与祝福
             <FaHeart className="text-pink-200 animate-pulse mx-1" />
             愿您的备考之路充满温暖与力量！
           </p>

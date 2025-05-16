@@ -3,20 +3,20 @@ import './globals.css';
 import { ThemeProvider } from './providers/theme-provider';
 
 export const metadata = {
-  title: '周周老师的加油站 - 留言墙',
-  description: '给正在备课的周周老师送上祝福和鼓励的留言墙',
+  title: '周周的加油站 - 留言墙',
+  description: '给正在备课的周周送上祝福和鼓励的留言墙',
   openGraph: {
     type: 'website',
     locale: 'zh_CN',
     url: 'https://zhou-zhou-message-wall.netlify.app/',
-    title: '周周老师的加油站 - 留言墙',
-    description: '给正在备课的周周老师送上祝福和鼓励的留言墙',
-    siteName: '周周老师的加油站',
+    title: '周周的加油站 - 留言墙',
+    description: '给正在备课的周周送上祝福和鼓励的留言墙',
+    siteName: '周周的加油站',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '周周老师的加油站 - 留言墙',
-    description: '给正在备课的周周老师送上祝福和鼓励的留言墙',
+    title: '周周的加油站 - 留言墙',
+    description: '给正在备课的周周送上祝福和鼓励的留言墙',
   },
   viewport: {
     width: 'device-width',

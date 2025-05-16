@@ -113,7 +113,7 @@ export default function MessageForm({ onMessageAdded }) {
     <Card className="w-full dark:bg-gray-800/60 dark:backdrop-blur-sm border-primary/10">
       <CardHeader>
         <CardTitle className="text-center text-primary dark:text-primary/90">
-          给周周老师留言
+          给周周留言
         </CardTitle>
       </CardHeader>
 
@@ -138,7 +138,7 @@ export default function MessageForm({ onMessageAdded }) {
               id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="写下您对周周老师的鼓励和祝福..."
+              placeholder="写下您对周周的鼓励和祝福..."
               className="min-h-[120px] dark:bg-gray-700/60 dark:border-gray-600"
               maxLength={200}
               disabled={isSubmitting}
