@@ -12,7 +12,7 @@ export default function Footer() {
           <span>制作</span>
         </div>
         <p className="text-sm">
-          &copy; {currentYear} 周周的加油站 - 永远支持您
+          &copy; {currentYear} 周周的加油站 - 永远支持你的胡胡
         </p>
       </div>
     </footer>

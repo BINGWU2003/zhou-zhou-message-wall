@@ -78,7 +78,7 @@ export default function Header() {
           >
             这里汇集了大家对周周的支持与祝福
             <FaHeart className="text-pink-200 animate-pulse mx-1" />
-            愿您的备考之路充满温暖与力量！
+            愿周周的备考之路充满温暖与力量！
           </p>
         </div>
       </div>
