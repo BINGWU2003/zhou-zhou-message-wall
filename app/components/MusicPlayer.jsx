@@ -34,6 +34,22 @@ const songs = [
     title: "林俊杰《当你》",
     url: "https://cloudshoping-1318477772.cos.ap-nanjing.myqcloud.com/%E6%9E%97%E4%BF%8A%E6%9D%B0%20-%20%E5%BD%93%E4%BD%A0.mp3",
   },
+  {
+    title: "十个勤天《我成为我的同时》",
+    url: "https://cloudshoping-1318477772.cos.ap-nanjing.myqcloud.com/music/%E5%8D%81%E4%B8%AA%E5%8B%A4%E5%A4%A9%20-%20%E6%88%91%E6%88%90%E4%B8%BA%E6%88%91%E7%9A%84%E5%90%8C%E6%97%B6.mp3",
+  },
+  {
+    title: "十个勤天《后院里的夏天》",
+    url: "https://cloudshoping-1318477772.cos.ap-nanjing.myqcloud.com/music/%E5%8D%81%E4%B8%AA%E5%8B%A4%E5%A4%A9%20-%20%E5%90%8E%E9%99%A1%E9%97%A8%E7%9A%84%E5%A4%8F.mp3",
+  },
+  {
+    title: "十个勤天《少年归来》",
+    url: "https://cloudshoping-1318477772.cos.ap-nanjing.myqcloud.com/music/%E5%8D%81%E4%B8%AA%E5%8B%A4%E5%A4%A9%20-%20%E5%B0%91%E5%B9%B4%E5%BD%92%E6%9D%A5.mp3",
+  },
+  {
+    title: "十个勤天《麦》",
+    url: "https://cloudshoping-1318477772.cos.ap-nanjing.myqcloud.com/music/%E5%8D%81%E4%B8%AA%E5%8B%A4%E5%A4%A9%20-%20%E9%BA%A6%E8%8A%92.mp3",
+  },
 ];
 
 export default function MusicPlayer() {
