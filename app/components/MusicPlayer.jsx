@@ -176,7 +176,7 @@ export default function MusicPlayer() {
   return (
     <div
       className={cn(
-        "fixed bottom-20 right-4 z-50 transition-all duration-300 ease-in-out",
+        "fixed bottom-36 right-4 z-50 transition-all duration-300 ease-in-out",
         "bg-white dark:bg-gray-800 rounded-lg shadow-lg",
         "border border-gray-200 dark:border-gray-700",
         isExpanded ? "w-72" : "w-14 h-14"
