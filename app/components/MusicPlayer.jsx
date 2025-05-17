@@ -47,7 +47,7 @@ const songs = [
     url: "https://cloudshoping-1318477772.cos.ap-nanjing.myqcloud.com/music/%E5%8D%81%E4%B8%AA%E5%8B%A4%E5%A4%A9%20-%20%E5%B0%91%E5%B9%B4%E5%BD%92%E6%9D%A5.mp3",
   },
   {
-    title: "十个勤天《麦》",
+    title: "十个勤天《麦芒》",
     url: "https://cloudshoping-1318477772.cos.ap-nanjing.myqcloud.com/music/%E5%8D%81%E4%B8%AA%E5%8B%A4%E5%A4%A9%20-%20%E9%BA%A6%E8%8A%92.mp3",
   },
 ];
