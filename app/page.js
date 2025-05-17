@@ -7,6 +7,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import MessageForm from './components/MessageForm'
 import MessageList from './components/MessageList'
+import MusicPlayer from './components/MusicPlayer'
 import { FaSpinner } from 'react-icons/fa';
 
 export default function Home() {
@@ -42,6 +43,9 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Toaster 组件，用于显示通知 */}
       <Toaster position="top-center" richColors />
+
+      {/* 音乐播放器 */}
+      <MusicPlayer />
 
       {/* 背景装饰元素 */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
